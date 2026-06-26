@@ -3,6 +3,27 @@ import { ApiError } from "../utils/ApiError.js";
 import {User} from "../models/user.model.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+
+const generateAccessAndRefreshTokens=async(userId)=>
+{
+    try {
+        const user= await User.findById(userId)
+        const accessToken=user.generateAccessToken()
+        const refreshToken=user.generateRefreshToken()
+
+        user.refreshToken=refreshToken
+        await user.save({ validateBeforeSave:false} )
+
+        return {accessToken,refreshToken}
+        
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+}
+
+
+
 const registerUser= asyncHandler (async (req,res)=>{
     //get user detail from frontend
     //validation-not empty
@@ -18,12 +39,20 @@ const registerUser= asyncHandler (async (req,res)=>{
     //user details
     const{fullName,email,username,password}=req.body
     // console.log("email:",email);
+    // console.log({
+    //     fullName,
+    //     email,
+    //     username,
+    //     password
+    // });
 
-    if(
-        [fullName,email,username,password].some((field)=>field.trim()===""))
-        {
-            throw new ApiError(400,"all fields are required")
-        }
+    if (
+        [fullName, email, username, password].some(
+            (field) => !field || field.trim() === ""
+        )
+    ) {
+        throw new ApiError(400, "All fields are required");
+    }
 
     const existedUser= await User.findOne({
             $or:[{ username },{ email }]
@@ -31,8 +60,20 @@ const registerUser= asyncHandler (async (req,res)=>{
     if(existedUser){
             throw new ApiError(409,"User with email or username already exists")
     }
-    const avatarLocalPath= req.files?.avatar[0]?.path;
-    const coverImageLocalPath= req.files?.coverImage[0]?.path;
+    // console.log(req.files);
+    // console.log("Avatar:", req.files?.avatar);
+    // console.log("Cover:", req.files?.coverImage); 
+    let avatarLocalPath;
+    //=req.files?.avatar[0]?.path;
+    // const coverImageLocalPath= req.files?.coverImage[0]?.path;
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.avatar) && req.files.avatar.length>0){
+        avatarLocalPath=req.files.avatar[0].path
+    }
+
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0){
+        coverImageLocalPath=req.files.coverImage[0].path
+    }
 
     if(!avatarLocalPath){
         throw new ApiError(400,"Avatar file is required")
@@ -68,8 +109,73 @@ const registerUser= asyncHandler (async (req,res)=>{
     
     
 })
+//login user
+//compulsory username or email and password
+//check for none values of email ,password or username
+//is username or email existed match password
+//is username or email did not exist return "username or email did not exist kindly sign up"
+//access token and refresh token generate
+//send cookies
 
-export {registerUser}
+
+//req.body->data
+
+const loginUser=asyncHandler(async(req,res)=>{
+
+    const {username,email,password}=req.body
+    console.log(req.body);
+    console.log(username)
+    if (!username && !email){
+        throw new ApiError(400,"username or email required")
+    }
+    
+    const user= await User.findOne(
+       { $or:[{username},{email}]
+})
+    if(!user){
+        throw new ApiError(400,"username or email does not exist")
+    }
+    const isPasswordValid = await user.isPasswordCorrect(password)
+    if(!isPasswordValid){
+        throw new ApiError(400,"Invalid user password")
+    }
+    const {accessToken,refreshToken}=await generateAccessAndRefreshTokens(user._id)
+    const loggedInUser=await User.findById(user._id).select("-password -refreshToken")
+    const options={
+        httpOnly:true,
+        secure:true
+
+    }
+    return res
+    .status(200)
+    .cookie("accessToken",accessToken,options)
+    .cookie("refreshToken",refreshToken,options)
+    .json(
+        new ApiResponse(200,
+            {
+                user:loggedInUser,accessToken,refreshToken
+            },
+            "User logged in successfully"
+        )
+    )
+
+
+
+})
+
+
+
+
+
+
+
+
+
+export {registerUser,
+    loginUser
+}
+
+
 
 
 
