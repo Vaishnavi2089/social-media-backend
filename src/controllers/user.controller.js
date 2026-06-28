@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import {User} from "../models/user.model.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { JsonWebTokenError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 const generateAccessAndRefreshTokens=async(userId)=>
 {
@@ -188,20 +188,20 @@ const logoutUser= asyncHandler(async(req,res)=>{
 })
 
 const refreshAccessToken= asyncHandler(async(req,res)=>{
-    const incomingAccessToken=req.cookie.accessToken||req.body.refreshToken
-    if(!incomingAccessToken){
+    const incomingRefreshToken=req.cookies.refreshToken||req.body.refreshToken
+    if(!incomingRefreshToken){
         throw new ApiError(401,"Unauthorized request")
     }
    try {
-     const decodedToken =Jwt.verify(
-         incomingAccessToken,process.env.REFRESH_TOKEN_SECRET
+     const decodedToken =jwt.verify(
+        incomingRefreshToken,process.env.REFRESH_TOKEN_SECRET
      )
      const user=await User.findById(decodedToken?._id)
      if(!user){
          throw new ApiError(401,"Invalid refresh token")
      }
  
-     if(incomingAccessToken!==user?.refreshToken){
+     if(incomingRefreshToken!==user?.refreshToken){
          throw new ApiError(401,"refresh token is expired or used")
  
      }
@@ -209,7 +209,7 @@ const refreshAccessToken= asyncHandler(async(req,res)=>{
          httpOnly:true,
          secure:true
      }
-     const {accessToken,newRefreshToken}=await generateAccessAndRefreshTokens(user._id)
+     const {accessToken,refreshToken:newRefreshToken}=await generateAccessAndRefreshTokens(user._id)
      return res
      .status(200)
      .cookie("accessToken",accessToken,options)
@@ -228,11 +228,12 @@ const refreshAccessToken= asyncHandler(async(req,res)=>{
 
 
 })
-
 //password change
-const changeCurrentPassoword= asyncHandler(async (req,res)=>{
+const changeCurrentPassword= asyncHandler(async (req,res)=>{
+    
     const{oldPassword,newPassword}=req.body
-    const user=await User.findById(req.user?.id)
+    
+    const user=await User.findById(req.user?._id)
     if(!user){
         throw new ApiError(400,"User not found")
     }
@@ -267,11 +268,14 @@ const currentUser=asyncHandler(async (req,res)=>{
 
 
 
+
+
+
 export {registerUser,
     loginUser,
     logoutUser,
     refreshAccessToken,
-    changeCurrentPassoword,
+    changeCurrentPassword,
     currentUser
     
 }
