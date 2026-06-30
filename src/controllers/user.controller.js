@@ -296,7 +296,7 @@ const updateAccountDetails= asyncHandler(async(req,res)=>{
     
 
 })
-
+//updating user avatar and deleting previous one
 const updateUserAvatar= asyncHandler(async(req,res)=>{
     const oldUser= await User.findById(req.user?._id)
     const oldPublicId=oldUser?.avatar?.publicId
@@ -334,7 +334,7 @@ const updateUserAvatar= asyncHandler(async(req,res)=>{
         )
     )
 })
-
+//updating cover image and deleting previous one
 const updateUserCoverImage= asyncHandler(async(req,res)=>{
     const oldUser= await User.findById(req.user?._id)
     const oldPublicId= oldUser?.coverImage?.publicId
@@ -375,7 +375,7 @@ const updateUserCoverImage= asyncHandler(async(req,res)=>{
     )
 })
 
-
+// user profile
 const getUserChannelProfile=asyncHandler(async(req,res)=>{
     const {username}=req.params
     if(!username?.trim()){
@@ -456,6 +456,60 @@ const getUserChannelProfile=asyncHandler(async(req,res)=>{
     ))
 
 })
+// users watch history fetch through pipeline
+const getWatchHistory=asyncHandler(async(req,res)=>{
+    const user= await User.aggregate([
+        {
+            $match:{
+                _id: new mongoose.Types.ObjectId(req.user?._id)
+            }
+        },
+        {
+            $lookup:{
+                from:"videos",
+                localField:"watchHistory",
+                foreignField:"_id",
+                as:"watchHistory",
+                pipeline:[
+                    {
+                        $lookup:{
+                            from:"users",
+                            localField:"owner",
+                            foreignField:"_id",
+                            as:"owner",
+                            pipeline:[
+                                {
+                                    $project:{
+                                        fullName:1,
+                                        username:1,
+                                        avatar:1
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        $addFields:{
+                            owner:{
+                                $first:"$owner"
+                            }
+                        }
+                    }
+                ]
+            }
+
+        }
+    ])
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            user?.[0]?.watchHistory || [ ],
+            "watch history fetched successfully"
+        )
+    )
+})
 
 
 
@@ -476,7 +530,8 @@ export {registerUser,
     updateAccountDetails,
     updateUserAvatar,
     updateUserCoverImage,
-    getUserChannelProfile
+    getUserChannelProfile,
+    getWatchHistory
     
 }
 
