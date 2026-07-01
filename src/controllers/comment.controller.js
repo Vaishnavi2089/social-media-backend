@@ -1,0 +1,82 @@
+import mongoose from "mongoose"
+import {Comment} from "../models/comment.model.js"
+import {ApiError} from "../utils/ApiError.js"
+import {ApiResponse} from "../utils/ApiResponse.js"
+import {asyncHandler} from "../utils/asyncHandler.js"
+const getVideoComments = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+
+    if (!videoId) {
+        throw new ApiError(400, "Video Id is missing");
+    }
+
+    if (!mongoose.isValidObjectId(videoId)) {
+        throw new ApiError(400, "Invalid Video Id");
+    }
+
+    const comments = await Comment.aggregate([
+        {
+            $match: {
+                video: new mongoose.Types.ObjectId(videoId)
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            username: 1,
+                            avatar: 1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $addFields: {
+                owner: {
+                    $first: "$owner"
+                }
+            }
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
+        },
+        {
+            $skip: (Number(page) - 1) * Number(limit)
+        },
+        {
+            $limit: Number(limit)
+        },
+        {
+            $project: {
+                content: 1,
+                owner: 1,
+                createdAt: 1
+            }
+        }
+    ]);
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            comments,
+            "Comments fetched successfully"
+        )
+    );
+});
+
+
+export {
+    getVideoComments
+    
+    }
