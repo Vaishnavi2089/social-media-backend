@@ -75,8 +75,47 @@ const getVideoComments = asyncHandler(async (req, res) => {
     );
 });
 
+const addComment = asyncHandler(async (req, res) => {
+    const {videoId}=req.params
+    if(!videoId){
+        throw new ApiError(400,"Missing video id")
+    }
+    if(!mongoose.isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid video id")
+    }
+    const {content}=req.body
+    if(!content?.trim()){   //avoids empty content
+        throw new ApiError(400,"Content is missing")
+    }
+    const video = await Video.findById(videoId)
+    if(!video){
+        throw new ApiError(404,"Video not found")
+    }
+    const comment= await Comment.create(
+        {
+            content:content.trim(),//trim unnecessary spaces
+            video:videoId,
+            owner:req.user._id
+        }
+    )
+    if(!comment){ //adding this additionally to know where the code breaks
+        throw new ApiError(500,"failed to add comment")
+    }
+    return res
+    .status(201)
+    .json(new ApiResponse(
+        201,
+        comment,
+        "Comment added successfully"
+    ))
+
+
+})
+
+
 
 export {
-    getVideoComments
+    getVideoComments,
+    addComment
     
     }
