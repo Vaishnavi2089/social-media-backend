@@ -154,12 +154,47 @@ const updateComment=asyncHandler(async(req,res)=>{
 
     
 })
+const deleteComment=asyncHandler(async(req,res)=>{
+    //get comment id and varify 
+    //owner of video and owner of comment can delete the comment 
+    const {commentId}=req.params
+    if(!commentId){
+        throw new ApiError(400,"Comment id missing")
+    }
+    if(!mongoose.isValidObjectId(commentId)){
+        throw new ApiError(400,"Invalid Comment id")
+    }
+    const comment =await Comment.findById(commentId)
+    if(!comment){
+        throw new ApiError(404,"Comment not found")
+    }
+    const video = await Video.findById(comment.video)
+    if(!video){
+        throw new ApiError(404,"Accociated video not found")
+    }
+    const isCommentOwner = comment.owner.equals(req.user?._id)
+    const isVideoOwner= video.owner.equals(req.user?._id)
+    if(!isCommentOwner && !isVideoOwner){
+        throw new ApiError(403,"You are not authorized to delete this comment")
+    }
+    await comment.deleteOne()
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            null,
+            "Comment deleted successfully"
+        )
+    )
+})
 
 
 
 export {
     getVideoComments,
     addComment,
-    updateComment
+    updateComment,
+    deleteComment
     
     }
