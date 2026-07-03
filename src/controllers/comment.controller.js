@@ -155,7 +155,7 @@ const updateComment=asyncHandler(async(req,res)=>{
     
 })
 const deleteComment=asyncHandler(async(req,res)=>{
-    //get comment id and varify 
+    //get comment id and verify
     //owner of video and owner of comment can delete the comment 
     const {commentId}=req.params
     if(!commentId){
@@ -170,7 +170,7 @@ const deleteComment=asyncHandler(async(req,res)=>{
     }
     const video = await Video.findById(comment.video)
     if(!video){
-        throw new ApiError(404,"Accociated video not found")
+        throw new ApiError(404,"Associated video not found")
     }
     const isCommentOwner = comment.owner.equals(req.user?._id)
     const isVideoOwner= video.owner.equals(req.user?._id)
