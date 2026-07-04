@@ -164,10 +164,26 @@ const publishAVideo = asyncHandler(async (req, res) => {
     if (!uploadedThumbnail) {
         throw new ApiError(500, "Failed to upload thumbnail")
     }
-
-    
+    const video = await Video.create({
+        videoFile: uploadedVideo.url,
+        thumbnail: uploadedThumbnail.url,
+        title,
+        description,
+        duration: uploadedVideo.duration,
+        owner: req.user._id,
+        isPublished: true
 })
-
+    if (!video) {
+        throw new ApiError(500, "Failed to publish video");
+    }
+    return res.status(201).json(
+        new ApiResponse(
+            201,
+            video,
+            "Video published successfully"
+        )
+    )
+})
 
 export {
     getAllVideos,
