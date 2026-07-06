@@ -3,6 +3,7 @@ import {Video} from "../models/video.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
+import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 const getAllVideos = asyncHandler(async(req,res)=>{
     const {page=1,limit=10,query,sortBy,sortType,userId}=req.query
@@ -141,7 +142,7 @@ const getAllVideos = asyncHandler(async(req,res)=>{
 })
 
 const publishAVideo = asyncHandler(async (req, res) => {
-    const { title, description} = req.body
+    const {title,description} = req.body
     if(!title?.trim() || !description?.trim() )
     {
         throw new ApiError(400,"Title and Description are required")
@@ -188,4 +189,5 @@ const publishAVideo = asyncHandler(async (req, res) => {
 export {
     getAllVideos,
     publishAVideo
+   
 }
