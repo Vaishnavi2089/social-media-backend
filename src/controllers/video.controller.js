@@ -261,10 +261,64 @@ const getVideoById = asyncHandler(async (req, res) => {
         )
     )
 })
+const updateVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    const {title,description}=req.body
+    if(!videoId){
+        throw new ApiError(400,"Video Id is required")
+    }
+    if(!mongoose.isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid video Id")
+    }
+    const video= await Video.findById(videoId)
+    if(!video){
+        throw new ApiError(404,"Video not found")
+    }
+    if(video.owner.toString()!==req.user?._id.toString()){
+        throw new ApiError(403,"You are not authorized to update this video")
+    }
+    if(!title && !description && !req.file){
+        throw new ApiError(400,"Nothing to update")
+    }
+    const updateFields={}
+    if(title?.trim()){
+        updateFields.title=title.trim()
+    }
+    if(description?.trim()){
+        updateFields.description=description.trim()
+    }
+    if(req.file?.path){
+        const thumbnail= await uploadOnCloudinary(req.file.path)
+        if(!thumbnail?.url){
+            throw new ApiError(500,"Failed to upload thumbnail")
+        }
+        updateFields.thumbnail=thumbnail.url
+    }
+    const updatedVideo = await Video.findByIdAndUpdate(
+        videoId,
+        {
+            $set:updateFields
+        },
+        {
+            new:true
+        }
+    )
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            updatedVideo,
+            "Video updated successfully"
+        )
+    )
+
+})
 
 
 export {
     getAllVideos,
     publishAVideo,
-    getVideoById
+    getVideoById,
+    updateVideo
 }
