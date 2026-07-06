@@ -19,7 +19,7 @@ router.route("/register").post(
     upload.fields([
         {
             name:"avatar",
-            macCount:1
+            maxCount:1
         },
         {
             name:"coverImage",
