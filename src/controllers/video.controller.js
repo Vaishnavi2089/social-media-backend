@@ -185,9 +185,86 @@ const publishAVideo = asyncHandler(async (req, res) => {
         )
     )
 })
+const getVideoById = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    if(!videoId){
+        throw new ApiError(400,"Video Id is required")
+    }
+    if(!mongoose.isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid video Id")
+    }
+    const video = await Video.findById(videoId)
+    if(!video){
+        throw new ApiError(404,"Video not found")
+    }
+    await Video.findByIdAndUpdate(
+        videoId,
+        {
+            $inc:{
+                views:1
+            },
+        },{new:true}
+    )
+    const videoById = await Video.aggregate([
+        {
+            $match:{
+                _id:new mongoose.Types.ObjectId(videoId)
+            }
+
+        },
+        {
+            $lookup:{
+                from:"users",
+                localField:"owner",
+                foreignField:"_id",
+                as:"owner",
+                pipeline:[
+                    
+                    {
+                        $project:{
+                            fullName:1,
+                            avatar:1,
+                            username:1,
+
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $addFields:{
+                owner:{
+                    $first:"$owner"
+                }
+            }
+        },
+        {
+           $project:{
+            videoFile:1,
+            thumbnail:1,
+            title:1,
+            description:1,
+            duration:1,
+            views:1,
+            owner:1
+           } 
+        }
+])
+    
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            videoById,
+            "Video fetched successfully"
+        )
+    )
+})
+
 
 export {
     getAllVideos,
-    publishAVideo
-   
+    publishAVideo,
+    getVideoById
 }
