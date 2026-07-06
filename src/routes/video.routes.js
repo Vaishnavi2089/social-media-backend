@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllVideos, getVideoById, publishAVideo } from "../controllers/video.controller.js";
+import { getAllVideos, getVideoById, publishAVideo, updateVideo } from "../controllers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -26,5 +26,9 @@ router
 router
     .route("/:videoId")
     .get(getVideoById)
+    .patch(
+        upload.single("thumbnail"),
+        updateVideo
+    )
 
 export default router
