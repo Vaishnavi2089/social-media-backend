@@ -330,9 +330,30 @@ const deleteVideo = asyncHandler(async (req, res) => {
     if(video.owner.toString()!==req.user?._id.toString()){
         throw new ApiError(403,"You are not authorized to delete this video")
     }
-    await deleteFromCloudinary(video.videoFile)
-    await deleteFromCloudinary(video.thumbnail)
-    await Video.findByIdAndDelete(videoId)
+    //delete video file from cloudinary
+    const videoDeleteResult = await deleteFromCloudinary(video.videoFile);
+
+    if (
+        !videoDeleteResult ||
+        (videoDeleteResult.result !== "ok" &&
+            videoDeleteResult.result !== "not found")
+    ) {
+        throw new ApiError(500, "Failed to delete video file");
+    }
+
+    // Delete thumbnail from Cloudinary
+    const thumbnailDeleteResult = await deleteFromCloudinary(video.thumbnail);
+
+    if (
+        !thumbnailDeleteResult ||
+        (thumbnailDeleteResult.result !== "ok" &&
+            thumbnailDeleteResult.result !== "not found")
+    ) {
+        throw new ApiError(500, "Failed to delete thumbnail");
+    }
+
+    // Delete video document
+    await video.deleteOne();
     
     return res
     .status(200)
@@ -345,6 +366,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
     )
     
 })
+
 
 
 export {
