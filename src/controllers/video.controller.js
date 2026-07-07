@@ -367,6 +367,36 @@ const deleteVideo = asyncHandler(async (req, res) => {
     
 })
 
+const togglePublishStatus = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    if(!videoId){
+        throw new ApiError(400,"Video Id is required")
+    }
+    if(!mongoose.isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid Video Id")
+    }
+    const video = await Video.findById(videoId)
+    if(!video){
+        throw new ApiError(404,"Video not found")
+    }
+    if(video.owner.toString()!==req.user?._id.toString()){
+        throw new ApiError(403,"You are not authorized to publish video")
+    }
+    video.isPublished = !video.isPublished
+    await video.save({validateBeforeSave: false})
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            video,
+            `Video ${video.isPublished ? "published" : "unpublished"} successfully`
+        )
+    )
+
+})
+
 
 
 export {
@@ -374,5 +404,6 @@ export {
     publishAVideo,
     getVideoById,
     updateVideo,
-    deleteVideo
+    deleteVideo,
+    togglePublishStatus
 }
