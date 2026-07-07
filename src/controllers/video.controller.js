@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
+import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js"
 
 const getAllVideos = asyncHandler(async(req,res)=>{
     const {page=1,limit=10,query,sortBy,sortType,userId}=req.query
@@ -314,11 +315,42 @@ const updateVideo = asyncHandler(async (req, res) => {
     )
 
 })
+const deleteVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    if(!videoId){
+        throw new ApiError(400,"Video Id is required")
+    }
+    if(!mongoose.isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid Video Id")
+    }
+    const video = await Video.findById(videoId)
+    if(!video){
+        throw new ApiError(404,"Video not found")
+    }
+    if(video.owner.toString()!==req.user?._id.toString()){
+        throw new ApiError(403,"You are not authorized to delete this video")
+    }
+    await deleteFromCloudinary(video.videoFile)
+    await deleteFromCloudinary(video.thumbnail)
+    await Video.findByIdAndDelete(videoId)
+    
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {},
+            "Video deleted successfully"
+        )
+    )
+    
+})
 
 
 export {
     getAllVideos,
     publishAVideo,
     getVideoById,
-    updateVideo
+    updateVideo,
+    deleteVideo
 }
