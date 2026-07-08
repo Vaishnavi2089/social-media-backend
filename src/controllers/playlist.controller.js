@@ -20,7 +20,7 @@ const createPlaylist = asyncHandler(async (req, res) => {
     .status(201)
     .json(
         new ApiResponse(
-            200,
+            201,
             playlist,
             "Playlist created successfully"
 
