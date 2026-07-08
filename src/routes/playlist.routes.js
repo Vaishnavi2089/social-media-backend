@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createPlaylist, getUserPlaylists } from "../controllers/playlist.controller.js";
+import { createPlaylist, getPlaylistById, getUserPlaylists } from "../controllers/playlist.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router()
@@ -13,5 +13,8 @@ router
     .route("/user/:userId")
     .get(getUserPlaylists)
 
+router
+    .route("/:playlistId")
+    .get(getPlaylistById)
 export default router
 
