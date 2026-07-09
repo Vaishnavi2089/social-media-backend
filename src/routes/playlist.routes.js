@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createPlaylist, getPlaylistById, getUserPlaylists , addVideoToPlaylist} from "../controllers/playlist.controller.js";
+import { createPlaylist, getPlaylistById, getUserPlaylists , addVideoToPlaylist,removeVideoFromPlaylist} from "../controllers/playlist.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router()
@@ -20,5 +20,8 @@ router
 router
     .route("/:playlistId/add/:videoId")
     .patch(addVideoToPlaylist)
+    .delete(removeVideoFromPlaylist)
+
+
 export default router
 
