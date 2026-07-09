@@ -6,11 +6,11 @@ const subscriptionSchema= new Schema({
         ref:"User"
     },
     channel:{
-         ype:Schema.Types.ObjectId,
+        type:Schema.Types.ObjectId,
         ref:"User"
         
     }
 },{timestamps:true})
 
 
-export const subscription= mongoose.model("Subscription",subscriptionSchema)
+export const Subscription= mongoose.model("Subscription",subscriptionSchema)
