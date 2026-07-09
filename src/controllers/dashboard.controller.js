@@ -70,7 +70,35 @@ const getChannelStats = asyncHandler(async(req,res)=>{
 
 })
 
+const getChannelVideos = asyncHandler(async (req, res) => {
+    const channelId = req.params.channelId || req.user?._id
+    if(!channelId){
+        throw new ApiError(401,"Unauthorized")
+    }
+    if(!mongoose.isValidObjectId(channelId)){
+        throw new ApiError(400,"Invalid channel Id")
+    }
+    const query = {
+        owner: channelId
+    }
+    if(req.params.channelId){
+        query.isPublished = true
+    }
+    const videos = await Video.find(query).sort({createdAt: -1})
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            videos,
+            "Channel videos fetched successfully"
+        )
+    )
+})
+
 
 export {
-    getChannelStats
+    getChannelStats,
+    getChannelVideos
 }
