@@ -198,7 +198,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(403,"You are not authorized to delete the playlist")
     }
     await Playlist.findByIdAndDelete(playlistId)
-    
+
     return res
     .status(200)
     .json(
@@ -210,11 +210,62 @@ const deletePlaylist = asyncHandler(async (req, res) => {
     )
     
 })
+
+const updatePlaylist = asyncHandler(async (req, res) => {
+    const {playlistId} = req.params
+    const {name, description} = req.body
+    if(!playlistId){
+        throw new ApiError(400,"Playlist Id is required")
+    }
+    if(!mongoose.isValidObjectId(playlistId)){
+        throw new ApiError(400,"Invalid Playlist Id")
+    }
+    if(!name && !description){
+        throw new ApiError(400,"Nothing to update")
+    }
+    const playlist = await Playlist.findById(playlistId)
+    if(!playlist){
+        throw new ApiError(404,"Playlist not found")
+    }
+    if(!playlist.owner.equals(req.user._id)){
+        throw new ApiError(403,"You are not authorized to update this playlist")
+    }
+    const updateFields = {}
+    
+    if(name) {
+        updateFields.name=name
+    }
+    if(description){
+        updateFields.description=description
+    }
+    
+    const updatedPlaylist = await Playlist.findByIdAndUpdate(
+        playlistId,
+        {
+            $set:updateFields
+        },
+        {
+            new:true
+        }
+
+    )
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            updatedPlaylist,
+            "Playlist updated successfully"
+
+        )
+    )
+})
 export {
     createPlaylist,
     getUserPlaylists,
     getPlaylistById,
     addVideoToPlaylist,
     removeVideoFromPlaylist,
-    deletePlaylist
+    deletePlaylist,
+    updatePlaylist
 }
