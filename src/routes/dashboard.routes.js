@@ -1,12 +1,20 @@
 import { Router } from "express";
-import { verifyJWT } from "../middlewares/auth.middlewar.js";
-import { getChannelStats } from "../controllers/dashboard.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { getChannelStats,getChannelVideos } from "../controllers/dashboard.controller.js";
 
 const router = Router()
-router.use(verifyJWT)
+
 
 router
     .route("/stats")
-    .get(getChannelStats)
+    .get(verifyJWT,getChannelStats)
+
+router
+    .route("/channel-videos")
+    .get(verifyJWT, getChannelVideos);
+
+router
+    .route("/channel-videos/:channelId")
+    .get(getChannelVideos);
 
 export default router
