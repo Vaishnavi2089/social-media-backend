@@ -53,4 +53,71 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     )
 })
 
-export {toggleSubscription}
+const getUserChannelSubscribers = asyncHandler(async (req, res) => {
+    const {channelId} = req.params
+    if(!channelId){
+        throw new ApiError(400,"Channel Id is required")
+    }
+    if(!mongoose.isValidObjectId(channelId)){
+        throw new ApiError(400,"Invalid Channel Id")
+    }
+    const channel = await User.findById(channelId);
+
+    if (!channel) {
+        throw new ApiError(404, "Channel not found");
+}
+    const subscribers = await Subscription.aggregate(
+        [
+            {
+                $match:{
+                    channel: new mongoose.Types.ObjectId(channelId) 
+                }
+            },
+            {
+                $sort:{
+                    createdAt:-1
+                }
+            },
+            {
+                $lookup:{
+                    from:"users",
+                    localField:"subscriber",
+                    foreignField:"_id",
+                    as: "subscriber",
+                    pipeline:[
+                        {
+                            $project:{
+                                username:1,
+                                avatar:1,
+                                fullName:1
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $addFields:{
+                    subscriber: {
+                        $first: "$subscriber"
+                    }
+                }
+            }
+        ]
+    )
+    return res
+.status(200)
+.json(
+    new ApiResponse(
+        200,
+        subscribers,
+        "Channel subscribers fetched successfully"
+    )
+)
+})
+
+
+
+
+export {toggleSubscription,
+    getUserChannelSubscribers
+}
