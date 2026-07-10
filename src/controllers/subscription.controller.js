@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Subscription } from "../models/subscription.model.js";
 import {User} from "../models/user.model.js"
+import { Subscription } from "../models/subscription.model.js";
 
 const toggleSubscription = asyncHandler(async (req, res) => {
     const {channelId} = req.params
@@ -115,9 +116,69 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 )
 })
 
+const getSubscribedChannels = asyncHandler(async (req, res) => {
+    const { subscriberId } = req.params
+    if(!subscriberId){
+        throw new ApiError(400,"Subscriber Id is required")
+    }
+    if(!mongoose.isValidObjectId(subscriberId)){
+        throw new ApiError(400,"Invalid Subscriber Id")
+    }
+    const subscription = await Subscription.aggregate(
+        [
+            {
+                $match:{
+                    subscriber: new mongoose.Types.ObjectId(subscriberId)
+                }
+            },
+            {
+                $sort:{
+                    createdAt:-1
+                }
+            },
+            {
+                $lookup:{
+                    from: "users",
+                    localField: "channel",
+                    foreignField: "_id",
+                    as : "subscription",
+                    pipeline:[
+                        {
+                            $project:{
+                                username:1,
+                                fullName:1,
+                                avatar:1
+                            }
+                        }
+
+                    ]
+
+                }
+            },
+            {
+                $addFields: {
+                    subscription: {
+                        $first: "$subscription"
+                    }
+                }
+            }
+        ]
+    )
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            subscription,
+            "Subscribed channel fetched successfully"
+        )
+    )
+
+})
 
 
 
 export {toggleSubscription,
-    getUserChannelSubscribers
+    getUserChannelSubscribers,
+    getSubscribedChannels
 }
