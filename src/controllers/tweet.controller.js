@@ -90,7 +90,50 @@ const getUserTweets = asyncHandler(async (req, res) => {
 
 })
 
+const updateTweet = asyncHandler(async (req, res) => {
+    const {tweetId} = req.params
+    const {content}= req.body
+    if(!mongoose.isValidObjectId(tweetId)){
+        throw new ApiError(400,"Invalid Tweet Id")
+    }
+    if(!content?.trim()){
+        throw new ApiError(400,"Nothing to update")
+    }
+
+    const tweet = await Tweet.findById(tweetId)
+    if(!tweet){
+        throw new ApiError(404,"Tweet not found")
+    }
+    if(!tweet.owner.equals(req.user?._id)){
+        throw new ApiError(403,"You are not authorized to update this tweet")
+    }
+    const updatedTweet= await Tweet.findByIdAndUpdate(
+        tweetId,
+        {
+            $set:{
+                content
+            }
+        },
+        {
+            new:true
+        }
+    )
+        
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            updatedTweet,
+            "Tweet updated successfully"
+        )
+    )
+
+})
+
+
 
 export {createTweet,
-    getUserTweets
+    getUserTweets,
+    updateTweet
 }
