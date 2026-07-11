@@ -16,7 +16,4 @@ router
 router
     .route("/u/:subscriberId")
     .get(getSubscribedChannels)
-export {toggleSubscription,
-    getUserChannelSubscribers,
-    getSubscribedChannels
-}
+export default router
