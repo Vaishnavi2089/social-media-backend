@@ -1,5 +1,6 @@
 import mongoose, { isValidObjectId } from "mongoose"
 import {Tweet} from "../models/tweet.model.js"
+import {User} from "../models/user/model.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
@@ -26,4 +27,70 @@ const createTweet = asyncHandler(async (req, res) => {
     )
 })
 
-export {createTweet}
+
+const getUserTweets = asyncHandler(async (req, res) => {
+    const {userId} = req.params
+    if(!userId){
+        throw new ApiError(400,"User Id is required")
+    }    
+    if(!mongoose.isValidObjectId(userId)){
+        throw new ApiError(400,"Invalid user Id")
+    }
+    
+    const userTweets = await Tweet.aggregate(
+        [
+            {
+                $match:{
+                    owner: new mongoose.Types.ObjectId(userId)
+
+                }
+            },
+            {
+                $lookup:{
+                    from:"users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "owner",
+                    pipeline:[
+                        {
+                            $project:{
+                                username:1,
+                                fullName:1,
+                                avatar:1
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $addFields:{
+                    owner:{
+                        $first: "$owner"
+
+                    }
+                }
+            },
+            {
+                $sort:{
+                    createdAt:-1
+                }
+            },
+            
+        ]
+    )
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            userTweets,
+            "User Tweets fetched successfully"
+        )
+    )
+
+})
+
+
+export {createTweet,
+    getUserTweets
+}
