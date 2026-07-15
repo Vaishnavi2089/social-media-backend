@@ -5,6 +5,7 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import {deleteFromCloudinary} from "../utils/deleteFromCloudinary.js"
 
 const generateAccessAndRefreshTokens=async(userId)=>
 {

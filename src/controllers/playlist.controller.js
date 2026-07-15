@@ -38,7 +38,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
     if(!mongoose.isValidObjectId(userId)){
         throw new ApiError(400,"Invalid User Id")
     }
-    const playlists = await Playlist.findById(
+    const playlists = await Playlist.find(
         {
             owner:userId
         }
