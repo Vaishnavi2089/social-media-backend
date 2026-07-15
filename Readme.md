@@ -1,147 +1,239 @@
+<div align="center">
+
 # 🚀 Social Media Backend API
 
-A production-ready **RESTful Backend API** for a modern social media platform built with **Node.js**, **Express.js**, and **MongoDB**. This backend provides secure authentication, media management, user interactions, analytics, and scalable API architecture following industry best practices.
+A scalable, production-inspired **RESTful Backend API** for a modern social media platform built using **Node.js**, **Express.js**, and **MongoDB**.
 
-Designed with a modular architecture, JWT authentication, MongoDB Aggregation Pipelines, Cloudinary integration, and centralized error handling, making it suitable for real-world applications.
+Designed with industry-standard backend practices including **JWT Authentication**, **Refresh Token Rotation**, **Cloudinary Media Management**, **MongoDB Aggregation Pipelines**, and a clean **MVC Architecture**.
+
+<p align="center">
+
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=for-the-badge)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary)
+
+</p>
+
+<p align="center">
+
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
+![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square)
+![Made with Love](https://img.shields.io/badge/Made%20With-❤️-red?style=flat-square)
+
+</p>
+
+</div>
 
 ---
 
-## 🌟 Features
+# 📑 Table of Contents
 
-### 🔐 Authentication & Authorization
+- [Overview](#-overview)
+- [Project Highlights](#-project-highlights)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [System Architecture](#-system-architecture)
+- [Authentication Flow](#-authentication-flow)
+- [Installation](#-installation)
+- [Environment Variables](#-environment-variables)
+- [Running the Project](#-running-the-project)
+- [API Modules](#-api-modules)
+- [Database Design](#-database-design)
+- [Security](#-security)
+- [Performance Optimizations](#-performance-optimizations)
+- [API Testing](#-api-testing)
+- [Future Improvements](#-future-improvements)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Author](#-author)
+
+---
+
+# 📖 Overview
+
+This project is a **production-inspired backend** for a modern social media platform inspired by applications such as **YouTube** and **Twitter**.
+
+It demonstrates scalable backend engineering concepts including:
+
+- RESTful API Design
+- JWT Authentication
+- Refresh Token Rotation
+- Cookie-based Authentication
+- Cloudinary Media Uploads
+- MongoDB Aggregation Pipelines
+- MVC Architecture
+- Standardized API Responses
+- Centralized Error Handling
+
+The project is designed to showcase backend development best practices and real-world API design using the MERN ecosystem.
+
+---
+
+# 🌟 Project Highlights
+
+- 🔐 Secure JWT Authentication
+- 🔄 Refresh Token Rotation
+- ☁️ Cloudinary Media Storage
+- 📊 MongoDB Aggregation Pipelines
+- 🎥 Video Management System
+- ❤️ Like System
+- 💬 Comment System
+- 📂 Playlist Management
+- 📺 Subscription System
+- 📈 Dashboard Analytics
+- 🛡️ HTTP-only Cookie Authentication
+- 📦 Modular MVC Architecture
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication
+
 - User Registration
 - User Login
 - Secure Logout
 - JWT Authentication
 - Refresh Token Rotation
 - Password Hashing using bcrypt
+- HTTP-only Cookie Authentication
 - Change Password
 - Refresh Access Token
-- HTTP-only Cookie Authentication
 
-### 👤 User Management
+---
+
+## 👤 User Management
+
 - Get Current User
 - Update Account Details
 - Update Avatar
 - Update Cover Image
-- User Channel Profile
 - Watch History
-- User Dashboard
+- User Channel Profile
 
-### 🎥 Video Management
+---
+
+## 🎥 Video Management
+
 - Upload Videos
-- Update Video Details
+- Update Videos
 - Delete Videos
 - Publish / Unpublish Videos
-- Fetch Single Video
-- Fetch All Videos
-- Video Search
+- Search Videos
 - Pagination
-- Sorting
 - Filtering
+- Sorting
 
-### ❤️ Likes
+---
+
+## ❤️ Likes
+
 - Like / Unlike Videos
-- Like / Unlike Tweets
 - Like / Unlike Comments
+- Like / Unlike Tweets
 - Get Liked Videos
 
-### 💬 Comments
-- Add Comment
+---
+
+## 💬 Comments
+
+- Create Comment
 - Update Comment
 - Delete Comment
 - Get Video Comments
-- Pagination Support
 
-### 📝 Tweets
+---
+
+## 📝 Tweets
+
 - Create Tweet
 - Update Tweet
 - Delete Tweet
 - Fetch User Tweets
 
-### 📂 Playlists
+---
+
+## 📂 Playlists
+
 - Create Playlist
 - Update Playlist
 - Delete Playlist
-- Add Video to Playlist
-- Remove Video from Playlist
-- Get Playlist Details
+- Add Videos
+- Remove Videos
 
-### 📺 Subscriptions
-- Subscribe Channel
-- Unsubscribe Channel
+---
+
+## 📺 Subscriptions
+
+- Subscribe Channels
+- Unsubscribe Channels
 - Get Subscribers
 - Get Subscribed Channels
 
-### 📊 Dashboard & Analytics
+---
+
+## 📊 Dashboard
+
 - Channel Statistics
 - Total Videos
 - Total Views
 - Total Subscribers
 - Total Likes
-- MongoDB Aggregation Pipelines
 
-### 🩺 Health Check
-- Server Status Endpoint
-- API Availability Monitoring
+---
+
+## 🩺 Health Check
+
+- API Status
+- Server Health
 - Uptime Verification
-
-### ☁️ Cloud Storage
-- Cloudinary Integration
-- Avatar Upload
-- Cover Image Upload
-- Video Upload
-- Automatic File Management
-
-### ⚡ Additional Features
-- MongoDB Aggregation Pipelines
-- Pagination
-- Filtering
-- Sorting
-- Search
-- Async Error Handling
-- Standardized API Responses
-- Modular Architecture
 
 ---
 
 # 🛠 Tech Stack
 
-| Category | Technologies |
-|-----------|-------------|
+| Category | Technology |
+|-----------|------------|
 | Runtime | Node.js |
 | Framework | Express.js |
 | Database | MongoDB |
 | ODM | Mongoose |
 | Authentication | JWT |
-| Password Encryption | bcrypt |
+| Encryption | bcrypt |
 | File Upload | Multer |
 | Cloud Storage | Cloudinary |
 | Cookies | cookie-parser |
 | CORS | cors |
-| Environment Variables | dotenv |
+| Environment | dotenv |
 
 ---
 
-# 📁 Project Structure
+# 📂 Project Structure
 
-```
-src/
+```text
+src
 │
-├── controllers/
-├── models/
-├── routes/
-├── middlewares/
-├── db/
-├── utils/
-├── constants/
+├── controllers
+├── models
+├── routes
+├── middlewares
+├── db
+├── utils
+├── constants
+│
 ├── app.js
-├── index.js
-│
-public/
-│
-.env
+└── index.js
+
+public
+
+.env.example
+
 package.json
+
 README.md
 ```
 
@@ -149,50 +241,86 @@ README.md
 
 # 🏗 System Architecture
 
-The project architecture, database schema, and API relationships are documented below.
-
-📌 **Architecture Diagram**
-
-https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj?origin=share
-
----
-
-# 🔐 Authentication Flow
+The application follows a modular **MVC (Model–View–Controller)** architecture to ensure scalability, maintainability, and separation of concerns.
 
 ```text
-User Register
-      │
-      ▼
-Login
-      │
-      ▼
-Generate Access Token
-Generate Refresh Token
-      │
-      ▼
-Refresh Token Stored in Database
-      │
-      ▼
-Protected Routes
-      │
-      ▼
-Access Token Expires
-      │
-      ▼
-Refresh Token API
-      │
-      ▼
-New Access Token Generated
+                Client
+                   │
+                   ▼
+             Express Router
+                   │
+                   ▼
+              Controllers
+                   │
+                   ▼
+              Business Logic
+                   │
+                   ▼
+              MongoDB Atlas
+                   │
+          ┌────────┴────────┐
+          ▼                 ▼
+     Cloudinary        JWT Authentication
 ```
+
+> 📌 **Architecture Diagram**
+>
+> Replace the placeholder below with your exported Eraser diagram:
+>
+> ```md
+> ![Architecture](assets/architecture.png)
+> ```
+>
+> Interactive Diagram:
+>
+> https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj?origin=share
+
+---
+# 🔐 Authentication Flow
+
+The authentication system is based on **JWT Access Tokens** and **Refresh Tokens**.
+
+```text
+                User Login
+                    │
+                    ▼
+        Generate Access Token
+        Generate Refresh Token
+                    │
+                    ▼
+     Refresh Token Stored in Database
+                    │
+                    ▼
+         Protected API Requests
+                    │
+                    ▼
+        Access Token Expires
+                    │
+                    ▼
+        Refresh Token Endpoint
+                    │
+                    ▼
+        New Access Token Generated
+```
+
+### Authentication Features
+
+- JWT Access Token
+- Refresh Token Rotation
+- HTTP-only Cookies
+- Password Hashing using bcrypt
+- Protected Routes Middleware
+- Secure Logout
+- Refresh Access Token API
 
 ---
 
-# 📦 Installation
+# 🚀 Installation
 
-Clone the repository
+## Clone Repository
 
 ```bash
-git clone https://github.com/your-username/social-media-backend.git
+git clone https://github.com/<your-username>/social-media-backend.git
 ```
 
 Move into the project
@@ -201,7 +329,9 @@ Move into the project
 cd social-media-backend
 ```
 
-Install dependencies
+---
+
+## Install Dependencies
 
 ```bash
 npm install
@@ -225,23 +355,23 @@ REFRESH_TOKEN_SECRET=<your_refresh_token_secret>
 REFRESH_TOKEN_EXPIRY=10d
 
 CLOUDINARY_CLOUD_NAME=<your_cloud_name>
-CLOUDINARY_API_KEY=<your_api_key>
-CLOUDINARY_API_SECRET=<your_api_secret>
+CLOUDINARY_API_KEY=<your_cloudinary_api_key>
+CLOUDINARY_API_SECRET=<your_cloudinary_api_secret>
 
-CORS_ORIGIN=<your_frontend_url>
+CORS_ORIGIN=http://localhost:5173
 ```
 
 ---
 
 # ▶️ Running the Project
 
-Development
+### Development
 
 ```bash
 npm run dev
 ```
 
-Production
+### Production
 
 ```bash
 npm start
@@ -249,204 +379,333 @@ npm start
 
 ---
 
-# 📌 API Modules
+# 📬 API Modules
 
 ## 🔐 Authentication
 
-- Register
-- Login
-- Logout
-- Refresh Token
-- Change Password
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/users/register` | Register User |
+| POST | `/users/login` | Login User |
+| POST | `/users/logout` | Logout User |
+| POST | `/users/refresh-token` | Generate New Access Token |
+| POST | `/users/change-password` | Change Password |
 
 ---
 
 ## 👤 Users
 
-- Get Current User
-- Update Profile
-- Update Avatar
-- Update Cover Image
-- Watch History
-- Channel Profile
+| Method | Endpoint |
+|---------|----------|
+| GET | `/users/current-user` |
+| PATCH | `/users/update-account` |
+| PATCH | `/users/avatar` |
+| PATCH | `/users/cover-image` |
+| GET | `/users/history` |
+| GET | `/users/c/:username` |
 
 ---
 
 ## 🎥 Videos
 
-- Upload Video
-- Update Video
-- Delete Video
-- Publish Video
-- Toggle Publish Status
-- Get Video
-- Get All Videos
-
----
-
-## ❤️ Likes
-
-- Toggle Video Like
-- Toggle Tweet Like
-- Toggle Comment Like
-- Get Liked Videos
+| Method | Endpoint |
+|---------|----------|
+| POST | `/videos` |
+| GET | `/videos` |
+| GET | `/videos/:videoId` |
+| PATCH | `/videos/:videoId` |
+| DELETE | `/videos/:videoId` |
+| PATCH | `/videos/toggle/publish/:videoId` |
 
 ---
 
 ## 💬 Comments
 
-- Add Comment
-- Update Comment
-- Delete Comment
-- Get Video Comments
+| Method | Endpoint |
+|---------|----------|
+| POST | `/comments/:videoId` |
+| GET | `/comments/:videoId` |
+| PATCH | `/comments/c/:commentId` |
+| DELETE | `/comments/c/:commentId` |
+
+---
+
+## ❤️ Likes
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/likes/toggle/v/:videoId` |
+| POST | `/likes/toggle/c/:commentId` |
+| POST | `/likes/toggle/t/:tweetId` |
+| GET | `/likes/videos` |
 
 ---
 
 ## 📝 Tweets
 
-- Create Tweet
-- Update Tweet
-- Delete Tweet
-- Get User Tweets
+| Method | Endpoint |
+|---------|----------|
+| POST | `/tweets` |
+| GET | `/tweets/user/:userId` |
+| PATCH | `/tweets/:tweetId` |
+| DELETE | `/tweets/:tweetId` |
 
 ---
 
 ## 📂 Playlists
 
-- Create Playlist
-- Update Playlist
-- Delete Playlist
-- Add Video
-- Remove Video
-- Get Playlist
+| Method | Endpoint |
+|---------|----------|
+| POST | `/playlists` |
+| GET | `/playlists/:playlistId` |
+| GET | `/playlists/user/:userId` |
+| PATCH | `/playlists/:playlistId` |
+| PATCH | `/playlists/add/:videoId/:playlistId` |
+| DELETE | `/playlists/remove/:videoId/:playlistId` |
+| DELETE | `/playlists/:playlistId` |
 
 ---
 
 ## 📺 Subscriptions
 
-- Subscribe
-- Unsubscribe
-- Subscriber List
-- Subscribed Channels
+| Method | Endpoint |
+|---------|----------|
+| POST | `/subscriptions/c/:channelId` |
+| GET | `/subscriptions/c/:channelId` |
+| GET | `/subscriptions/u/:subscriberId` |
 
 ---
 
 ## 📊 Dashboard
 
-- Channel Analytics
-- Total Videos
-- Total Views
-- Total Likes
-- Total Subscribers
+| Method | Endpoint |
+|---------|----------|
+| GET | `/dashboard/stats` |
+| GET | `/dashboard/videos` |
 
 ---
 
 ## 🩺 Health Check
 
-- Server Status
-- API Availability
+| Method | Endpoint |
+|---------|----------|
+| GET | `/healthcheck` |
 
 ---
 
 # 🗄 Database Collections
 
-- Users
-- Videos
-- Comments
-- Likes
-- Tweets
-- Playlists
-- Subscriptions
+The application uses the following MongoDB collections:
+
+```text
+Users
+Videos
+Comments
+Likes
+Tweets
+Playlists
+Subscriptions
+```
 
 ---
 
-# 📈 Database Relationships
+# 🔗 Database Relationships
 
 ```text
 User
- ├── Videos
- ├── Tweets
- ├── Comments
- ├── Likes
- ├── Playlists
- └── Subscriptions
+├── Videos
+├── Tweets
+├── Comments
+├── Likes
+├── Playlists
+└── Subscriptions
 
 Video
- ├── Owner
- ├── Comments
- └── Likes
+├── Owner
+├── Comments
+└── Likes
 
 Playlist
- ├── Owner
- └── Videos
+├── Owner
+└── Videos
 
 Subscription
- ├── Subscriber
- └── Channel
+├── Subscriber
+└── Channel
 ```
 
 ---
 
 # 🔒 Security
 
+This backend follows several security best practices.
+
+### Authentication
+
 - JWT Authentication
 - Refresh Token Rotation
-- Password Hashing (bcrypt)
 - HTTP-only Cookies
 - Protected Routes
-- Input Validation
+
+### Data Protection
+
+- Password Hashing using bcrypt
 - Environment Variables
-- Centralized Error Handling
+- Input Validation
+- Authentication Middleware
 
----
+### Error Handling
 
-# 🚀 Performance Optimizations
-
-- MongoDB Aggregation Pipelines
-- Pagination
-- Database Indexing
-- Query Projection
-- Modular Folder Structure
 - Async Error Wrapper
 - Standardized API Responses
+- Custom Error Classes
+- Centralized Error Middleware
 
 ---
 
-# ☁️ Cloudinary Integration
+# ⚡ Performance Optimizations
 
-Media uploads are managed using Cloudinary.
+The project includes several optimizations for scalability.
 
-Supported uploads:
-
-- User Avatar
-- Cover Image
-- Videos
+- MongoDB Aggregation Pipelines
+- Query Projection
+- Database Indexing
+- Pagination
+- Sorting
+- Filtering
+- Search
+- Modular MVC Architecture
+- Cloudinary Media Storage
+- Async Handler Wrapper
 
 ---
-
 # 🧪 API Testing
 
-All endpoints were tested using **Postman** to ensure correct request validation, authentication flow, and response handling.
+All endpoints were manually tested using **Postman** throughout development to ensure correct request validation, authentication flow, database interactions, and standardized API responses.
+
+### Base URL
+
+```http
+http://localhost:8000/api/v1
+```
+
+### API Modules Tested
+
+- ✅ Authentication
+- ✅ Users
+- ✅ Videos
+- ✅ Comments
+- ✅ Likes
+- ✅ Tweets
+- ✅ Playlists
+- ✅ Subscriptions
+- ✅ Dashboard
+- ✅ Health Check
 
 ---
 
-# 📌 Future Improvements
+# 📄 Sample API Response
 
-- Real-time Chat (Socket.io)
-- Notifications
+All API responses follow a standardized structure.
+
+```json
+{
+    "statusCode": 200,
+    "data": {
+        "user": {
+            "_id": "686ea0b0f7751f52a9bcdc03",
+            "username": "vaishnavigupta",
+            "email": "vaishnavi@example.com"
+        }
+    },
+    "message": "User fetched successfully",
+    "success": true
+}
+```
+
+---
+
+# 🚀 Deployment
+
+The application can be deployed on any Node.js-supported hosting platform.
+
+Examples include:
+
+- Render
+- Railway
+- DigitalOcean
+- AWS EC2
+- Azure App Service
+- Google Cloud Run
+
+Before deployment, configure:
+
+- MongoDB Atlas
+- Cloudinary Credentials
+- Environment Variables
+- CORS Origin
+- JWT Secrets
+
+---
+
+# 📈 Future Improvements
+
+The following enhancements are planned for future versions.
+
+### Authentication
+
 - Email Verification
 - OTP Authentication
 - Two-Factor Authentication (2FA)
+
+### Features
+
+- Real-time Chat (Socket.io)
+- Notifications
 - Bookmark System
+- Saved Videos
 - Follow Recommendations
 - Trending Feed
-- Admin Dashboard
-- Swagger/OpenAPI Documentation
+
+### Backend
+
+- Swagger / OpenAPI Documentation
 - Docker Support
-- CI/CD Pipeline
-- Unit & Integration Testing
-- Rate Limiting
 - Redis Caching
+- Rate Limiting
+- API Versioning
+- Unit Testing
+- Integration Testing
+- CI/CD Pipeline
+
+---
+
+# 💡 What I Learned
+
+Developing this project provided practical experience with backend engineering concepts, including:
+
+- Designing scalable RESTful APIs
+- Building secure authentication systems using JWT
+- Implementing Refresh Token Rotation
+- Managing file uploads with Cloudinary
+- Writing MongoDB Aggregation Pipelines
+- Designing relational data models with MongoDB
+- Structuring large Express applications using MVC architecture
+- Handling asynchronous operations and centralized error management
+
+---
+
+# 📌 Project Statistics
+
+| Metric | Count |
+|---------|------:|
+| REST APIs | 40+ |
+| Controllers | 10+ |
+| MongoDB Collections | 7 |
+| Authentication System | JWT + Refresh Tokens |
+| Cloud Storage | Cloudinary |
+| Aggregation Pipelines | Yes |
+| Media Uploads | Images & Videos |
 
 ---
 
@@ -454,27 +713,43 @@ All endpoints were tested using **Postman** to ensure correct request validation
 
 Contributions are welcome.
 
+If you would like to contribute:
+
 1. Fork the repository
 
-2. Create your feature branch
+2. Create a feature branch
 
 ```bash
-git checkout -b feature/your-feature
+git checkout -b feature/amazing-feature
 ```
 
 3. Commit your changes
 
 ```bash
-git commit -m "feat: add your feature"
+git commit -m "feat: add amazing feature"
 ```
 
-4. Push the branch
+4. Push to GitHub
 
 ```bash
-git push origin feature/your-feature
+git push origin feature/amazing-feature
 ```
 
 5. Open a Pull Request
+
+---
+
+# 📝 Coding Standards
+
+This project follows consistent coding practices:
+
+- Modular MVC Architecture
+- RESTful API Design
+- Standardized API Responses
+- Async/Await
+- Centralized Error Handling
+- Environment-based Configuration
+- Meaningful Commit Messages
 
 ---
 
@@ -482,16 +757,42 @@ git push origin feature/your-feature
 
 This project is licensed under the **MIT License**.
 
+Feel free to use, modify, and distribute it for educational or personal purposes.
+
 ---
 
 # 👩‍💻 Author
 
-**Vaishnavi Gupta**
+### Vaishnavi Gupta
 
-B.Tech – Artificial Intelligence & Data Science
+**B.Tech – Artificial Intelligence & Data Science**
+
+Passionate about Backend Development, Scalable Systems, and Full Stack Engineering.
+
+### Connect with me
+
+- GitHub: https://github.com/<your-github-username>
+- LinkedIn: https://linkedin.com/in/<your-linkedin-profile>
 
 ---
 
+# 🙏 Acknowledgements
+
+This project was built as part of my backend development journey to strengthen my understanding of scalable API design, authentication, database modeling, and production-ready backend architecture.
+
+Special thanks to the open-source community and the creators of the amazing tools and libraries that made this project possible.
+
+---
+
+<div align="center">
+
 ## ⭐ Support
 
-If you found this project useful, please consider giving it a ⭐ on GitHub. It helps others discover the project and motivates future development.
+If you found this project helpful, please consider giving it a **⭐ Star** on GitHub.
+
+It motivates me to build more open-source projects and helps others discover this repository.
+
+**Thank you for visiting! 🚀**
+
+</div>
+
